@@ -1,15 +1,20 @@
 // import { resList } from "../utils/mockData";
-import RestaurantCards from "./RestaurantCards";
+import RestaurantCards , {withPromotedLabel} from "./RestaurantCards";
 import {useState , useEffect} from "react" ; 
 import resList from "../utils/mockData" ; 
 import Shimmer from "./Shimmer";
 import { filter } from "domutils";
+import { createBrowserRouter , RouterProvider } from "react-router-dom";
+import {Link} from "react-router-dom" ; 
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
     let [listOfRestaurants , setlistOfRestaurants] = useState(resList) ; 
     let [filteredRestaurants , setfilteredRestaurants] = useState([]) ; 
 
+
     const [searchText , setsearchText] = useState("") ; 
+    const RestaurantCardPromoted = withPromotedLabel(RestaurantCards)  ; 
     useEffect(() => {
       // console.log("useEffect called") ; 
       fetchData()
@@ -69,17 +74,21 @@ const Body = () => {
         }
     ] ; 
 
+    const onlineStatus = useOnlineStatus() ; 
+
+    if(onlineStatus === false)
+        return <h1>Look's like you are offline</h1>
     return (
         <div className="body">
-            <div className="filter">
-              <div className="Search">
-              <input type="text" className="search-box" value={searchText} placeholder="Enter name of restaurant"
+            <div className="filter flex">
+              <div className="Search m-4 p-4">
+              <input type="text" className="border border-solid border-black " value={searchText} placeholder="Name of restaurant"
               onChange={(e) => {
                 setsearchText(e.target.value) ; 
               }}
                />
                {console.log("Getting rendered") }
-                <button
+                <button className=" m-4 bg-green-200 px-4 py-2 rounded-3xl hover:bg-green-400"
                     onClick={() => {
                       const filteredList= listOfRestaurants.filter( (restaurant) => {
                         console.log(searchText) ; 
@@ -92,19 +101,28 @@ const Body = () => {
                 {/* </input> */}
               </div>
               {/* <button>Search</button> */}
-                <button className="filter-btn" onClick={() => {
-                  const filteredList = listOfRestaurants.filter((restaurant) =>  restaurant.info.avgRating > 4.0 ) ; 
-                  // console.log(listOfRestaurants) ;
-                  setfilteredRestaurants(filteredList); 
-                }} >
-                    Top Rated Restaurant
-                </button>
+               <div className="Search m-4 p-4 flex items-center">
+                <button className=" bg-gray-200 px-4 py-2 hover:bg-gray-500" onClick={() => {
+                    const filteredList = listOfRestaurants.filter((restaurant) =>  restaurant.info.avgRating > 4.0 ) ; 
+                    // console.log(listOfRestaurants) ;
+                    setfilteredRestaurants(filteredList); 
+                  }} >
+                      Top Rated Restaurant
+                  </button>
+               </div>
 
             </div>
-            <div className="res-container">
+            <div className="flex flex-wrap">
               {
                 // this is basically a function, returning a piece of JSX. 
-                filteredRestaurants.map( restaurant => <RestaurantCards key={restaurant.info.id } resData = {restaurant}/>)
+                filteredRestaurants.map( restaurant => (
+                  <Link to = {"/restaurants/" + restaurant.info.id}>  
+                    {
+                      restaurant.info.isOpen ? <RestaurantCardPromoted resData = {restaurant} /> :  <RestaurantCards key={restaurant.info.id } resData = {restaurant}/>  
+                    }
+                      {/* <RestaurantCards key={restaurant.info.id } resData = {restaurant}/>   */}
+                   </Link> 
+                ))
      
               }
             </div>

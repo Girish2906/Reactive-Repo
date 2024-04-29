@@ -1,11 +1,11 @@
 import { useRouteError } from "react-router-dom"; 
 
 const Error = () => {
-    const msg = useRouteError()                                                                                 ; 
-    console.log(msg) ; 
-    console.log(typeof(msg)) ; 
-    console.log(msg.status) ; 
-    console.log(msg.statusText) ; 
+    const err = useRouteError()                                                                                 ; 
+    console.log(err) ; 
+    console.log(typeof(err)) ; 
+    // console.log(msg.status) ; 
+    // console.log(msg.statusText) ; 
     return (
         <div>
             <h1>OOPS!</h1>
