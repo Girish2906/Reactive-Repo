@@ -14,10 +14,10 @@ import Greetings from "./components/Greetings.js" ;
 import Groceries from "./components/Groceries.js";
 import {lazy , Suspense} from "react" ; 
 
-const Grocery = lazy( () => import("./components/Groceries.js") 
-  ) ; 
+// const Grocery = lazy( () => import("./components/Groceries.js") 
+//   ) ; 
 
-const About = lazy( () => import( "./components/About")) ; 
+// const About = lazy( () => import( "./components/About")) ; 
 
 const AppLayout = () => {
     return <div className="appLayout">
